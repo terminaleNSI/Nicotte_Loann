@@ -1,6 +1,6 @@
-salle (0, 2)
-playerx 602
-playery 557
-playervie 2
+salle (0, 0)
+playerx 971
+playery 486
+playervie 3
 playermaxvie 3
 playerbody zombie
