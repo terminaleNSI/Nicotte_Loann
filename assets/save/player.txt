@@ -1,0 +1,6 @@
+salle (0, 0)
+playerx 1266
+playery 162
+playervie 0
+playermaxvie 3
+playerbody human

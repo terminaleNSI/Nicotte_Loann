@@ -1,0 +1,10 @@
+quiver None
+feets None
+legs None
+chestplate None
+belt None
+helmet None
+gloves None
+arrow None
+weapons None
+sheild None
