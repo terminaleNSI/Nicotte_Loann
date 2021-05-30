@@ -8,8 +8,8 @@ Created on Tue Mar 23 08:18:14 2021
 import pygame
 import os
 
-# screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-screen = pygame.display.set_mode((1366, 768))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+# screen = pygame.display.set_mode((1366, 768))
 # screen = pygame.display.set_mode((1920, 1080))
 
 
