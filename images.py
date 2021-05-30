@@ -368,6 +368,8 @@ def init_images_archer():
         for j in range(sprite_size.get(nom))]
         for i in range(8)] for nom in os.listdir("assets/archer")}
 
+    images_archer['idle'] = images_archer.get('walk')
+
     return 112
 
 def init_image_wyvern():

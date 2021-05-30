@@ -62,6 +62,10 @@ class Archer(pygame.sprite.Sprite):
 
                 self.rect.topleft = self.x, self.y
 
+            else:
+                self.n_image = 0
+                self.action = 'idle'
+
         if self.action == 'walk' and self.last_img + 100 < ms:
             self.n_image += 1
             self.last_img = ms

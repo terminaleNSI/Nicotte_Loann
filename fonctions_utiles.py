@@ -58,10 +58,11 @@ def get_distance(player, mob):
 
 def reset_save():
     fichier = open("assets/save/inventory.txt", "w")
-    for i in range(3):
+    for i in range(2):
         for j in range(8):
             fichier.write("None;")
         fichier.write("\n")
+    fichier.write("bow;arrow 60;None;None;None;None;None;None;")
 
     fichier = open("assets/save/equiped.txt", "w")
     fichier.write(
@@ -74,6 +75,7 @@ def reset_save():
     for i in os.listdir("assets/save/entity"):
         fichier = open(f"assets/save/entity/{i}", "w")
         fichier.write("")
+
 
 
 def draw_rect_alpha(surface, color, rect):

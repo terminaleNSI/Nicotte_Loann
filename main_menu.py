@@ -36,6 +36,9 @@ def main_menu(img, run):
                             if i == 0 or i == 1:
                                 if i == 1:
                                     FU.reset_save()
+                                    fichier = open("assets/save/boss", "w")
+                                    fichier.write("wyvern True 150")
+
                                 game = jeu.Jeu(img)
                                 run = game.init_game(run)
 

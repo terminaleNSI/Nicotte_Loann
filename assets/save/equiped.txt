@@ -5,6 +5,6 @@ chestplate None
 belt None
 helmet None
 gloves None
-arrow None
-weapons None
+arrow 48
+weapons bow
 sheild None

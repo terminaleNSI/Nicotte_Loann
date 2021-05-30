@@ -12,12 +12,12 @@ import images as img
 
 
 def game(jeu, run):
-    player = jeu.player
     mape = jeu.mape
-    inv = jeu.inv
     console = jeu.console
 
     while run:
+        inv = jeu.inv
+        player = jeu.player
         jeu.clock.tick(100)
         pygame.display.update()
         time = pygame.time.get_ticks()

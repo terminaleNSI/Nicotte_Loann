@@ -60,120 +60,128 @@ class Player:
         self.bow_effect = pygame.mixer.Sound("assets/sounds/bow_shoot.mp3")
 
     def display(self, screen, ms, inv, console):
-        if not self.bumped:
-            if not self.move:
+        if not self.die:
+            if not self.bumped:
+                if not self.move:
 
-                weapons = self.inventaire.equiped.get("weapons")[0]
-                if not weapons:
+                    weapons = self.inventaire.equiped.get("weapons")[0]
+                    if not weapons:
+                        anim = "walkcycle"
+                        self.last_anim = "walkcycle"
+                        self.n_image = 0
+                    else:
+                        anim = weapons.name
+                        if (anim == "dagger" or anim == "saber" or
+                                anim == "saber_blue" or anim == "saber_red"):
+                            anim = "dagger"
+
+                        if anim == "bow_up":
+                            anim = "bow"
+
+                        if self.last_anim != anim:
+                            self.last_anim = anim
+                            self.n_image = 0
+
+                        if not inv and not console:
+                            if anim == "bow":
+                                pygame.mouse.set_cursor(
+                                    (24, 24), (0, 0), *FU.target_cursor)
+                                mouse = pygame.mouse.get_pos()
+
+                                x = mouse[0] + 12 - self.rect.centerx
+                                y = mouse[1] + 12 - self.rect.centery
+                                angle = math.degrees(math.atan2(y, x))
+
+                                if -45 <= angle <= 45:
+                                    self.direction = 3
+                                elif 45 <= angle <= 135:
+                                    self.direction = 2
+                                elif 135 <= angle or -135 >= angle:
+                                    self.direction = 1
+                                else:
+                                    self.direction = 0
+
+                                if (pygame.mouse.get_pressed()[0] and
+                                    self.n_image <= 8 and
+                                        self.inventaire.equiped.get("arrow")[0]):
+                                    if (self.last_image_bow + 100 < ms and
+                                            self.n_image < 8):
+                                        self.last_image_bow = ms
+                                        self.n_image += 1
+
+                                elif 8 <= self.n_image < 12:
+                                    if self.last_image_bow + 100 < ms:
+                                        if self.n_image == 8:
+                                            self.shoot(angle, ms, 7)
+                                        self.last_image_bow = ms
+                                        self.n_image += 1
+
+                                else:
+                                    self.n_image = 0
+
+                            elif anim == "dagger":
+                                if (pygame.mouse.get_pressed()[0] and
+                                        self.n_image == 0):
+                                    self.n_image += 1
+
+                                if (self.n_image > 0 and
+                                        self.last_image_spear + 100 < ms):
+                                    self.last_image_spear = ms
+                                    self.n_image += 1
+
+                                    if self.n_image == 6:
+                                        self.n_image = 0
+
+                            elif anim == "spear":
+                                if (pygame.mouse.get_pressed()[0] and
+                                        self.n_image == 0):
+                                    self.n_image += 1
+
+                                if (self.n_image > 0 and
+                                        self.last_image_dagger + 100 < ms):
+                                    self.last_image_dagger = ms
+                                    self.n_image += 1
+
+                                    if self.n_image == 7:
+                                        self.n_image = 0
+
+                        else:
+                            self.n_image = 0
+                            pygame.mouse.set_cursor(*pygame.cursors.tri_left)
+
+                else:
                     anim = "walkcycle"
                     self.last_anim = "walkcycle"
-                    self.n_image = 0
-                else:
-                    anim = weapons.name
-                    if (anim == "dagger" or anim == "saber" or
-                            anim == "saber_blue" or anim == "saber_red"):
-                        anim = "dagger"
-
-                    if anim == "bow_up":
-                        anim = "bow"
-
-                    if self.last_anim != anim:
-                        self.last_anim = anim
-                        self.n_image = 0
-
-                    if not inv and not console:
-                        if anim == "bow":
-                            pygame.mouse.set_cursor(
-                                (24, 24), (0, 0), *FU.target_cursor)
-                            mouse = pygame.mouse.get_pos()
-
-                            x = mouse[0] + 12 - self.rect.centerx
-                            y = mouse[1] + 12 - self.rect.centery
-                            angle = math.degrees(math.atan2(y, x))
-
-                            if -45 <= angle <= 45:
-                                self.direction = 3
-                            elif 45 <= angle <= 135:
-                                self.direction = 2
-                            elif 135 <= angle or -135 >= angle:
-                                self.direction = 1
-                            else:
-                                self.direction = 0
-
-                            if (pygame.mouse.get_pressed()[0] and
-                                self.n_image <= 8 and
-                                    self.inventaire.equiped.get("arrow")[0]):
-                                if (self.last_image_bow + 100 < ms and
-                                        self.n_image < 8):
-                                    self.last_image_bow = ms
-                                    self.n_image += 1
-
-                            elif 8 <= self.n_image < 12:
-                                if self.last_image_bow + 100 < ms:
-                                    if self.n_image == 8:
-                                        self.shoot(angle, ms, 7)
-                                    self.last_image_bow = ms
-                                    self.n_image += 1
-
-                            else:
-                                self.n_image = 0
-
-                        elif anim == "dagger":
-                            if (pygame.mouse.get_pressed()[0] and
-                                    self.n_image == 0):
-                                self.n_image += 1
-
-                            if (self.n_image > 0 and
-                                    self.last_image_spear + 100 < ms):
-                                self.last_image_spear = ms
-                                self.n_image += 1
-
-                                if self.n_image == 6:
-                                    self.n_image = 0
-
-                        elif anim == "spear":
-                            if (pygame.mouse.get_pressed()[0] and
-                                    self.n_image == 0):
-                                self.n_image += 1
-
-                            if (self.n_image > 0 and
-                                    self.last_image_dagger + 100 < ms):
-                                self.last_image_dagger = ms
-                                self.n_image += 1
-
-                                if self.n_image == 7:
-                                    self.n_image = 0
-
-                    else:
-                        self.n_image = 0
-                        pygame.mouse.set_cursor(*pygame.cursors.tri_left)
 
             else:
                 anim = "walkcycle"
                 self.last_anim = "walkcycle"
+                self.n_image = 0
+                if self.last_bump + 40 < ms:
+                    self.nb_bump += 1
+                    x_up = math.cos(self.bumbed_direction) * 8
+                    y_up = math.sin(self.bumbed_direction) * 8
+                    self.last_bump = ms
+
+                    if (FU.get_pos_salle(self.rect.right + x_up,
+                                         self.rect.bottom + y_up)
+                            not in self.jeu.pos_walls and
+                        FU.get_pos_salle(self.rect.left + x_up,
+                                         self.rect.top + y_up)
+                            not in self.jeu.pos_walls):
+                        self.rect.left += x_up
+                        self.rect.top += y_up
+
+                    if self.nb_bump == 10:
+                        self.nb_bump = 0
+                        self.bumped = False
 
         else:
-            anim = "walkcycle"
-            self.last_anim = "walkcycle"
-            self.n_image = 0
-            if self.last_bump + 40 < ms:
-                self.nb_bump += 1
-                x_up = math.cos(self.bumbed_direction) * 8
-                y_up = math.sin(self.bumbed_direction) * 8
-                self.last_bump = ms
-
-                if (FU.get_pos_salle(self.rect.right + x_up,
-                                     self.rect.bottom + y_up)
-                        not in self.jeu.pos_walls and
-                    FU.get_pos_salle(self.rect.left + x_up,
-                                     self.rect.top + y_up)
-                        not in self.jeu.pos_walls):
-                    self.rect.left += x_up
-                    self.rect.top += y_up
-
-                if self.nb_bump == 10:
-                    self.nb_bump = 0
-                    self.bumped = False
+            anim = "die"
+            self.direction = 0
+            if self.last_image + 100 < ms and self.n_image <5:
+                self.n_image +=1
+                self.last_image = ms
 
         try:
             if (self.direction != 0 and
@@ -375,6 +383,7 @@ class Player:
         if self.vie <= 0:
             self.die = True
             self.die_time = pygame.time.get_ticks()
+            self.n_image = 0
 
     def shoot(self, angle, ms, force):
         bow = self.inventaire.equiped.get("weapons")[0].name

@@ -15,6 +15,7 @@ import inventaire
 import game
 import images as img
 import fonctions_utiles as FU
+import random as rdm
 import slime
 import golem
 import loot
@@ -30,6 +31,7 @@ class Jeu:
     def __init__(self, player_imgs):
         self.screen = img.screen
         self.clock = pygame.time.Clock()
+        self.player_imgs = player_imgs
 
         self.play = True
         self.caps_lock = False
@@ -158,6 +160,7 @@ class Jeu:
                 fichier.write("wyvern false 0\n")
 
     def load_entity(self, salle):
+        mob = 0
         time = pygame.time.get_ticks()
         fichier = open(f"assets/save/entity/{salle[1]}-{salle[0]}.txt", "r")
         lst = fichier.read()
@@ -166,6 +169,7 @@ class Jeu:
             lst[i] = lst[i].split(" ")
 
             if lst[i][0] == 'slime':
+                mob += 1
                 nslime = slime.Slime(time, self)
                 nslime.rect.center = (FU.convert(int(lst[i][1])),
                                       FU.convert(int(lst[i][2])))
@@ -173,6 +177,7 @@ class Jeu:
                 self.slimes.append(nslime)
 
             elif lst[i][0] == 'golem':
+                mob += 1
                 ngolem = golem.Golem(time, self)
                 ngolem.rect.center = (FU.convert(int(lst[i][1])),
                                       FU.convert(int(lst[i][2])))
@@ -181,6 +186,7 @@ class Jeu:
                 self.golems.append(ngolem)
 
             elif lst[i][0] == 'archer':
+                mob += 1
                 narcher = archer.Archer(self)
                 narcher.rect.center = (FU.convert(int(lst[i][1])),
                                        FU.convert(int(lst[i][2])))
@@ -205,6 +211,19 @@ class Jeu:
                                      FU.get_list(lst[i][4:]),
                                      open = lst[i][3])
                 self.chest.append(nchest)
+
+            if mob == 0 and salle != (0, 2):
+                for i in range(rdm.randint(1,2)):
+                    nb = rdm.randint(0,2)
+                    if nb == 0:
+                        self.slimes.append(slime.Slime(time, self))
+
+                    elif nb == 1:
+                        self.golems.append(golem.Golem(time, self))
+
+                    elif nb == 2:
+                        self.archer.append(archer.Archer(self))
+
 
         if salle == (0, 2):
             fichier = open("assets/save/boss.txt", "r")
@@ -402,11 +421,18 @@ class Jeu:
                 s.set_alpha((pygame.time.get_ticks() - self.player.die_time) * 255 / 2000)
                 self.screen.blit(s, (0, 0))
 
-                s = FU.you_die
+                s = pygame.transform.scale(pygame.image.load("assets/die.png"), (FU.convert(1920), FU.convert(1080))).convert_alpha()
                 s.set_alpha((pygame.time.get_ticks() - self.player.die_time) * 255 / 2000)
-                self.screen.blit(s, ((self.screen.get_width() - FU.you_die.get_width()) / 2, (self.screen.get_height() - FU.you_die.get_height()) / 2))
+                self.screen.blit(s, (0, 0))
             else:
                 FU.reset_save()
+                self.inv = inventaire.inventaire(self.screen)
+
+                playermaxvie =  self.player.max_vie
+
+                self.player = pl.Player(self.inv, self.player_imgs, self)
+
+                self.player.max_vie = playermaxvie
+                self.player.vie = playermaxvie
+
                 self.init_salle()
-                self.inv.init_inventory()
-                self.inv.init_stuff()

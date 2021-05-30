@@ -85,13 +85,10 @@ class Wyvern(pygame.sprite.Sprite):
                 x = self.move_pos[0] - self.rect.centerx
                 y = self.move_pos[1] - self.rect.centery
                 angle = math.atan2(y, x)
-                print(FU.get_pos_salle(self.move_pos[0], self.move_pos[1]))
-                print(math.degrees(angle))
                 self.direction = self.get_direction(math.degrees(angle))
 
                 self.x += math.cos(angle)
                 self.y += math.sin(angle)
-                print((math.cos(math.radians(angle)), math.sin(math.radians(angle))))
 
                 self.rect.center = self.x, self.y
 
